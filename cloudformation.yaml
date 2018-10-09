@@ -9,6 +9,11 @@ Parameters:
     Default: default
     Description: Target ECS Cluster Name.
 
+  ecsSpotAgentImage:
+    Type: String
+    Default: mats16/ecs-spot-agent:latest
+    Description: If you need to use other image, please change this parameter.
+
 Metadata:
   AWS::CloudFormation::Interface:
     ParameterGroups:
@@ -17,8 +22,14 @@ Metadata:
           default: "ECS Configuration"
         Parameters:
           - ecsClusterName
+          - ecsSpotAgentImage
 
 Resources:
+
+  LogGroup: 
+    Type: AWS::Logs::LogGroup
+    Properties: 
+      RetentionInDays: 14
 
   ecsTaskRole:
     Type: "AWS::IAM::Role"
@@ -49,16 +60,22 @@ Resources:
     Type: AWS::ECS::TaskDefinition
     Properties:
       Family: !Sub ${AWS::StackName}-TaskDefinition
-      TaskRoleArn: !Ref ecsTaskRole
+      TaskRoleArn: !Ref "ecsTaskRole"
       RequiresCompatibilities: ["EC2"]
       NetworkMode: "host"
       ContainerDefinitions: 
         -
           Name: "ecs-spot-agent"
-          Image: "mats16/ecs-spot-agent"
+          Image: !Ref "ecsSpotAgentImage"
           Cpu: "10"
           Memory: "100"
           Essential: "true"
+          LogConfiguration:
+            LogDriver: "awslogs"
+            Options:
+              awslogs-region: !Ref "AWS::Region"
+              awslogs-group: !Ref "LogGroup"
+              awslogs-stream-prefix: !Ref "AWS::StackName"
 
   ecsService: 
     Type: AWS::ECS::Service
