@@ -28,7 +28,8 @@ Resources:
 
   LogGroup: 
     Type: AWS::Logs::LogGroup
-    Properties: 
+    Properties:
+      LogGroupName: !Sub "/ecs/${AWS::StackName}"
       RetentionInDays: 14
 
   ecsTaskRole:
@@ -59,7 +60,7 @@ Resources:
   ecsTaskDefinition:
     Type: AWS::ECS::TaskDefinition
     Properties:
-      Family: !Sub ${AWS::StackName}-TaskDefinition
+      Family: !Sub ${AWS::StackName}-ecsTaskDefinition
       TaskRoleArn: !Ref "ecsTaskRole"
       RequiresCompatibilities: ["EC2"]
       NetworkMode: "host"
@@ -68,14 +69,14 @@ Resources:
           Name: "ecs-spot-agent"
           Image: !Ref "ecsSpotAgentImage"
           Cpu: "10"
-          Memory: "100"
+          Memory: "40"
           Essential: "true"
           LogConfiguration:
             LogDriver: "awslogs"
             Options:
               awslogs-region: !Ref "AWS::Region"
               awslogs-group: !Ref "LogGroup"
-              awslogs-stream-prefix: !Ref "AWS::StackName"
+              awslogs-stream-prefix: !Ref "ecsClusterName"
 
   ecsService: 
     Type: AWS::ECS::Service
