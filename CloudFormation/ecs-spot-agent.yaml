@@ -69,7 +69,7 @@ Resources:
           Name: "ecs-spot-agent"
           Image: !Ref "ecsSpotAgentImage"
           Cpu: "10"
-          Memory: "40"
+          Memory: "30"
           Essential: "true"
           LogConfiguration:
             LogDriver: "awslogs"
