@@ -17,12 +17,16 @@ Parameters:
 Metadata:
   AWS::CloudFormation::Interface:
     ParameterGroups:
-      -
-        Label:
+      - Label:
           default: "ECS Configuration"
         Parameters:
           - ecsClusterName
           - ecsSpotAgentImage
+    ParameterLabels:
+      ecsClusterName:
+        default: ECS Cluster Name
+      ecsSpotAgentImage:
+        default: ECS SpotAgent Image
 
 Resources:
 
@@ -38,8 +42,7 @@ Resources:
       AssumeRolePolicyDocument: 
         Version: "2012-10-17"
         Statement: 
-          - 
-            Effect: "Allow"
+          - Effect: "Allow"
             Principal: 
               Service: 
                 - "ecs-tasks.amazonaws.com"
@@ -47,13 +50,11 @@ Resources:
               - "sts:AssumeRole"
       Path: "/"
       Policies: 
-        - 
-          PolicyName: "DeregisterContainerInstance"
+        - PolicyName: "DeregisterContainerInstance"
           PolicyDocument: 
             Version: "2012-10-17"
             Statement: 
-              - 
-                Effect: "Allow"
+              - Effect: "Allow"
                 Action: "ecs:DeregisterContainerInstance"
                 Resource: arn:aws:ecs:*:*:cluster/*"
 
@@ -65,8 +66,7 @@ Resources:
       RequiresCompatibilities: ["EC2"]
       NetworkMode: "host"
       ContainerDefinitions: 
-        -
-          Name: "ecs-spot-agent"
+        - Name: "ecs-spot-agent"
           Image: !Ref "ecsSpotAgentImage"
           Cpu: "10"
           Memory: "30"
