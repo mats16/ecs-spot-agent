@@ -10,5 +10,5 @@ NetworkMode: host
 
 ## How to Use
 
-If you use ecs-spot-agent quickly, please use [CloudFormation Template](https://github.com/mats16/ecs-spot-agent/blob/master/CloudFormation/ecs-spot-agent.yaml).
+If you use ecs-spot-agent quickly, please use [CloudFormation Template](https://github.com/mats16/ecs-spot-agent/blob/master/ecs-spot-agent.yaml).
 You only need to choose a target ECS cluster.

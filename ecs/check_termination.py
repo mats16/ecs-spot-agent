@@ -10,7 +10,7 @@ import logging
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(name)s %(levelname)s %(message)s')
 
-interval = int(os.environ.get('INTERVAL', 5))
+check_interval = int(os.environ.get('CHECK_INTERVAL'))
 
 class ECS():
     def __init__(self, region):
@@ -24,14 +24,14 @@ class ECS():
 
 
 def get_region():
+    logger.info('Check region from ec2 meta-data')
     availability_zone = requests.get('http://169.254.169.254/latest/meta-data/placement/availability-zone').text
-    logger.info('Get Region from EC2 meta-data')
     return availability_zone[0:-1]
 
 def get_metadata():
+    logger.info('Check ecs metadata from ecs-agent')
     res = requests.get('http://127.0.0.1:51678/v1/metadata')
     metadata = res.json()
-    logger.info('Get metadata from ecs-agent')
     return metadata
 
 
@@ -42,10 +42,10 @@ if __name__ == '__main__':
         try:
             res = requests.get('http://169.254.169.254/latest/meta-data/spot/termination-time')
             if res.status_code == 404:
-                sleep(interval)
+                sleep(check_interval)
                 continue
             elif res.status_code == 200:
-                logger.info('Deregister this instance from the cluster')
+                logger.warn('Deregister this instance from the cluster')
                 ecs = ECS(region)
                 ecs.deregister(metadata['Cluster'], metadata['ContainerInstanceArn'])
             else:
