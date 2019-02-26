@@ -1,3 +1,5 @@
+※ This project is moved to [awslabs/ec2-spot-labs](https://github.com/awslabs/ec2-spot-labs/tree/master/ecs-spot-agent).
+
 # ecs-spot-agent
 
 If you want to use [EC2 Spot Instances](https://aws.amazon.com/ec2/spot/) with [ECS](https://aws.amazon.com/ecs/), you need to care for termination-time.
@@ -10,5 +12,5 @@ NetworkMode: host
 
 ## How to Use
 
-If you use ecs-spot-agent quickly, please use [CloudFormation Template](https://github.com/mats16/ecs-spot-agent/blob/master/ecs-spot-agent.yaml).
+If you use ecs-spot-agent quickly, please use [CloudFormation Template](ecs-spot-agent.yaml).
 You only need to choose a target ECS cluster.
